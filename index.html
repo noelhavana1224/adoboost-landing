@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdoBoost — AI-Powered Cold Email Outreach</title>
+  <meta name="description" content="AdoBoost is the AI-powered cold email platform that writes your sequences, warms your inbox, and tracks every reply — all in one place.">
+  <meta property="og:title" content="AdoBoost — AI-Powered Cold Email Outreach">
+  <meta property="og:description" content="AI writes your sequences. AdoBoost sends them. Your calendar fills up.">
+  <meta property="og:url" content="https://adoboost.adobosolutions.com">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://adoboost.adobosolutions.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --blue:        #1d4ed8;
+      --blue-hover:  #1e40af;
+      --blue-light:  #3b82f6;
+      --purple:      #7c3aed;
+      --navy:        #0f172a;
+      --navy-mid:    #1e293b;
+      --slate:       #334155;
+      --muted:       #64748b;
+      --border:      #e2e8f0;
+      --bg:          #f8fafc;
+      --bg2:         #f1f5f9;
+      --white:       #ffffff;
+      --text:        #0f172a;
+      --text2:       #334155;
+      --text3:       #64748b;
+      --radius:      12px;
+      --shadow:      0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
+      --shadow-lg:   0 8px 32px rgba(0,0,0,0.12);
+      --grad:        linear-gradient(135deg, #1d4ed8, #7c3aed);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text); background: var(--white); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container  { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section    { padding: 96px 0; }
+    .section-sm { padding: 64px 0; }
+
+    .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--blue); background: rgba(29,78,216,0.08); border: 1px solid rgba(29,78,216,0.18); padding: 5px 14px; border-radius: 100px; }
+    .pill-purple { color: #7c3aed; background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.2); }
+    .pill-light  { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+
+    h1 { font-size: clamp(38px, 5.5vw, 66px); font-weight: 900; line-height: 1.04; letter-spacing: -0.045em; }
+    h2 { font-size: clamp(30px, 4vw, 50px); font-weight: 800; line-height: 1.1;  letter-spacing: -0.035em; }
+    h3 { font-size: 19px; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; }
+    .subhead { font-size: clamp(16px, 2vw, 19px); line-height: 1.7; color: var(--text3); max-width: 560px; }
+    .section-head { margin-bottom: 60px; }
+    .section-head.center { text-align: center; }
+    .section-head.center .subhead { margin: 0 auto; }
+    .section-head h2 { margin: 14px 0 18px; }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; border: none; transition: all 0.18s; white-space: nowrap; text-decoration: none; line-height: 1; }
+    .btn-lg  { padding: 16px 32px; font-size: 16px; border-radius: 12px; }
+    .btn-sm  { padding: 9px 18px; font-size: 13.5px; }
+    .btn-primary { background: var(--blue); color: #fff; box-shadow: 0 4px 16px rgba(29,78,216,0.32); }
+    .btn-primary:hover { background: var(--blue-hover); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(29,78,216,0.44); }
+    .btn-purple { background: var(--purple); color: #fff; box-shadow: 0 4px 16px rgba(124,58,237,0.32); }
+    .btn-purple:hover { background: #6d28d9; transform: translateY(-1px); }
+    .btn-ghost { background: rgba(255,255,255,0.11); color: #fff; border: 1.5px solid rgba(255,255,255,0.22); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.18); }
+    .btn-outline { background: transparent; color: var(--blue); border: 1.5px solid var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: #fff; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s; }
+    nav.scrolled { background: rgba(255,255,255,0.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 1px 0 rgba(0,0,0,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; height: 64px; gap: 8px; }
+    .nav-logo { font-size: 20px; font-weight: 900; letter-spacing: -0.045em; color: #fff; flex-shrink: 0; margin-right: 24px; transition: color 0.3s; }
+    .nav-logo span { color: #60a5fa; }
+    nav.scrolled .nav-logo { color: var(--navy); }
+    nav.scrolled .nav-logo span { color: var(--blue); }
+    .nav-links { display: flex; align-items: center; gap: 2px; flex: 1; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 6px 12px; border-radius: 8px; transition: color 0.18s, background 0.18s; }
+    nav.scrolled .nav-links a { color: var(--text3); }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    nav.scrolled .nav-links a:hover { color: var(--text); background: var(--bg); }
+    .nav-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .nav-signin { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.75); padding: 8px 14px; border-radius: 8px; transition: color 0.18s; }
+    nav.scrolled .nav-signin { color: var(--text3); }
+    .nav-signin:hover { color: #fff; }
+    nav.scrolled .nav-signin:hover { color: var(--text); }
+    .nav-cta { font-size: 13.5px; font-weight: 700; color: #fff; background: var(--blue); padding: 8px 18px; border-radius: 8px; transition: background 0.18s, transform 0.18s; box-shadow: 0 2px 8px rgba(29,78,216,0.35); }
+    .nav-cta:hover { background: var(--blue-hover); transform: translateY(-1px); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; margin-left: auto; background: none; border: none; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.25s; }
+    nav.scrolled .hamburger span { background: var(--navy); }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--white); border-top: 1px solid var(--border); padding: 16px 24px 28px; box-shadow: var(--shadow-lg); z-index: 199; }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a { display: block; padding: 13px 0; font-size: 15px; font-weight: 500; color: var(--text2); border-bottom: 1px solid var(--border); }
+    .mobile-menu a:last-of-type { border: none; }
+    .mobile-menu .btn { width: 100%; justify-content: center; margin-top: 16px; }
+
+    /* HERO */
+    #hero { background: linear-gradient(155deg, #0a0f1e 0%, #0f1535 35%, #160d2e 65%, #0a0f1e 100%); min-height: 100vh; display: flex; align-items: center; padding-top: 64px; position: relative; overflow: hidden; }
+    #hero::before { content: ''; position: absolute; top: -160px; right: -60px; width: 680px; height: 680px; background: radial-gradient(circle, rgba(29,78,216,0.22) 0%, transparent 65%); pointer-events: none; }
+    #hero::after  { content: ''; position: absolute; bottom: -100px; left: -80px; width: 480px; height: 480px; background: radial-gradient(circle, rgba(124,58,237,0.16) 0%, transparent 65%); pointer-events: none; }
+    #hero .grid-texture { position: absolute; inset: 0; z-index: 0; background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 32px 32px; pointer-events: none; }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; padding: 80px 24px 100px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-text .pill { margin-bottom: 20px; }
+    .hero-text h1 { color: #fff; margin-bottom: 22px; }
+    .hero-text h1 em { font-style: normal; background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-text .subhead { color: rgba(255,255,255,0.58); }
+    .hero-actions { display: flex; align-items: center; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+    .hero-trust { display: flex; align-items: center; gap: 8px; margin-top: 28px; font-size: 12.5px; color: rgba(255,255,255,0.35); flex-wrap: wrap; }
+    .hero-trust-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+    /* AI badges */
+    .ai-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+    .ai-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 100px; background: rgba(124,58,237,0.18); border: 1px solid rgba(124,58,237,0.3); color: #c4b5fd; }
+
+    /* App Mockup */
+    .hero-visual { position: relative; }
+    .hero-visual::before { content: ''; position: absolute; inset: -20px; border-radius: 24px; background: radial-gradient(circle at 50% 50%, rgba(29,78,216,0.18) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+    .app-mockup { position: relative; z-index: 1; background: #111827; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 40px 96px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04); overflow: hidden; font-size: 12px; }
+    .mock-bar { background: #0b1120; padding: 11px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mock-dot.r { background: #ff5f57; } .mock-dot.y { background: #febc2e; } .mock-dot.g { background: #28c840; }
+    .mock-url { flex: 1; margin: 0 8px; background: rgba(255,255,255,0.05); border-radius: 5px; padding: 4px 10px; font-size: 11px; color: rgba(255,255,255,0.3); font-family: monospace; }
+    .mock-body { display: flex; height: 360px; }
+    .mock-sidebar { width: 144px; background: #0d1424; flex-shrink: 0; border-right: 1px solid rgba(255,255,255,0.05); padding: 14px 0; }
+    .mock-logo { font-size: 13px; font-weight: 900; color: #fff; padding: 0 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 8px; letter-spacing: -0.04em; }
+    .mock-logo span { color: #60a5fa; }
+    .mock-nav { padding: 6px 10px; font-size: 11.5px; color: rgba(255,255,255,0.38); display: flex; align-items: center; gap: 7px; border-right: 2.5px solid transparent; }
+    .mock-nav.on { color: #fff; background: rgba(29,78,216,0.22); border-right-color: #1d4ed8; }
+    .mock-nav-icon { width: 13px; height: 13px; border-radius: 3px; background: currentColor; opacity: 0.55; flex-shrink: 0; }
+    .mock-main { flex: 1; padding: 14px; overflow: hidden; }
+    .mock-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .mock-title { font-size: 13px; font-weight: 700; color: #fff; }
+    .mock-new { background: #1d4ed8; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 5px; }
+    .mock-ai-bar { background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(29,78,216,0.2)); border: 1px solid rgba(124,58,237,0.3); border-radius: 6px; padding: 7px 10px; margin-bottom: 10px; font-size: 10px; color: #c4b5fd; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+    .mock-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+    .mock-stat { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 7px; padding: 8px; }
+    .mock-stat-val { font-size: 16px; font-weight: 800; color: #fff; line-height: 1; }
+    .mock-stat-lbl { font-size: 8.5px; color: rgba(255,255,255,0.32); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .mock-rows { display: flex; flex-direction: column; gap: 5px; }
+    .mock-row { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.065); border-radius: 7px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; }
+    .mock-row-name { font-size: 11px; font-weight: 600; color: #e2e8f0; }
+    .mock-row-meta { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+    .mock-badge { font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 20px; }
+    .mock-badge.active { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .mock-badge.warm   { background: rgba(251,146,60,0.15); color: #fb923c; }
+    .mock-badge.draft  { background: rgba(234,179,8,0.12);  color: #fbbf24; }
+
+    /* CAPABILITIES BAR */
+    #caps { background: var(--navy-mid); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 20px 0; }
+    .caps-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 0; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .cap-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.55); white-space: nowrap; }
+    .cap-item strong { color: rgba(255,255,255,0.88); font-weight: 700; }
+    .cap-dot { width: 1px; height: 20px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+
+    /* PROBLEM */
+    #problem { background: var(--bg); }
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .problem-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 28px; position: relative; overflow: hidden; transition: box-shadow 0.22s, transform 0.22s; }
+    .problem-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ef4444, #f97316); }
+    .problem-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .problem-icon { width: 44px; height: 44px; border-radius: 11px; background: #fef2f2; display: flex; align-items: center; justify-content: center; font-size: 21px; margin-bottom: 16px; }
+    .problem-card h3 { margin-bottom: 8px; }
+    .problem-card p  { font-size: 14.5px; color: var(--text3); line-height: 1.65; }
+
+    /* HOW IT WORKS */
+    #how { background: var(--white); }
+    .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; position: relative; }
+    .steps::before { content: ''; position: absolute; top: 27px; left: calc(16.67% + 8px); right: calc(16.67% + 8px); height: 2px; background: linear-gradient(90deg, transparent, var(--blue-light), var(--blue-light), transparent); opacity: 0.35; }
+    .step { text-align: center; padding: 0 12px; }
+    .step-num { width: 54px; height: 54px; border-radius: 50%; background: var(--grad); color: #fff; font-size: 21px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 24px rgba(29,78,216,0.28); position: relative; z-index: 1; }
+    .step h3 { margin-bottom: 10px; }
+    .step p   { font-size: 15px; color: var(--text3); line-height: 1.65; }
+    .step-items { display: flex; flex-direction: column; gap: 7px; margin-top: 18px; }
+    .step-item  { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text3); justify-content: center; }
+    .step-item .chk { width: 16px; height: 16px; border-radius: 50%; background: rgba(29,78,216,0.1); color: var(--blue); font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* AI SPOTLIGHT */
+    #ai-spotlight { background: linear-gradient(145deg, #0a0f1e 0%, #0f1535 40%, #1a0b35 70%, #0a0f1e 100%); position: relative; overflow: hidden; }
+    #ai-spotlight::before { content: ''; position: absolute; top: -120px; right: -80px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 65%); pointer-events: none; }
+    #ai-spotlight::after  { content: ''; position: absolute; bottom: -80px; left: -60px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(29,78,216,0.15) 0%, transparent 65%); pointer-events: none; }
+    #ai-spotlight .grid-texture { position: absolute; inset: 0; z-index: 0; background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 32px 32px; pointer-events: none; }
+    .ai-inner { position: relative; z-index: 1; }
+    .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+    .ai-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; transition: background 0.22s, border-color 0.22s, transform 0.22s; }
+    .ai-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(124,58,237,0.35); transform: translateY(-3px); }
+    .ai-card-icon { font-size: 28px; margin-bottom: 14px; }
+    .ai-card h3 { color: #fff; font-size: 17px; margin-bottom: 10px; }
+    .ai-card p  { font-size: 14px; color: rgba(255,255,255,0.52); line-height: 1.7; }
+    .ai-card-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 100px; background: rgba(124,58,237,0.22); border: 1px solid rgba(124,58,237,0.35); color: #c4b5fd; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* FEATURES */
+    #features { background: var(--bg); }
+    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .feat-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s; }
+    .feat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: rgba(29,78,216,0.22); }
+    .feat-icon { width: 50px; height: 50px; border-radius: 13px; background: linear-gradient(135deg, rgba(29,78,216,0.09), rgba(124,58,237,0.09)); border: 1px solid rgba(29,78,216,0.12); display: flex; align-items: center; justify-content: center; font-size: 23px; margin-bottom: 18px; }
+    .feat-card h3 { font-size: 16.5px; margin-bottom: 9px; }
+    .feat-card p  { font-size: 14px; line-height: 1.65; color: var(--text3); }
+
+    /* SCHEDULING SECTION */
+    #schedule { background: var(--white); }
+    .sched-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .sched-left h2 { margin: 14px 0 18px; }
+    .sched-left p  { font-size: 16px; color: var(--text3); line-height: 1.7; margin-bottom: 24px; }
+    .sched-points { display: flex; flex-direction: column; gap: 14px; }
+    .sched-point { display: flex; align-items: flex-start; gap: 12px; }
+    .sched-point-icon { width: 36px; height: 36px; border-radius: 9px; background: rgba(29,78,216,0.08); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .sched-point-text strong { font-size: 14px; color: var(--text); display: block; margin-bottom: 2px; }
+    .sched-point-text span { font-size: 13px; color: var(--text3); line-height: 1.55; }
+    .sched-right { background: var(--bg); border: 1.5px solid var(--border); border-radius: 18px; padding: 28px; }
+    .sched-ui-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .sched-tabs { display: flex; background: #f1f5f9; border-radius: 9px; padding: 4px; margin-bottom: 22px; }
+    .sched-tab { flex: 1; padding: 8px 0; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--text3); border-radius: 7px; cursor: default; }
+    .sched-tab.on { background: #fff; color: var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .sched-days { display: flex; gap: 5px; margin-bottom: 18px; flex-wrap: wrap; }
+    .sched-day { padding: 6px 11px; border-radius: 7px; font-size: 11px; font-weight: 700; background: #eff6ff; color: #2563eb; border: 1.5px solid #bfdbfe; }
+    .sched-day.off { background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; }
+    .sched-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+    .sched-row:last-child { border: none; }
+    .sched-row-label { color: var(--text3); font-weight: 500; }
+    .sched-row-val { font-weight: 700; color: var(--text); }
+
+    /* PRICING */
+    #pricing { background: var(--bg); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; align-items: start; }
+    .price-card { border: 1.5px solid var(--border); border-radius: 16px; padding: 26px 22px; transition: box-shadow 0.22s, transform 0.22s; position: relative; overflow: hidden; background: var(--white); }
+    .price-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .price-card.pop { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(29,78,216,0.11), var(--shadow); transform: translateY(-6px); }
+    .price-card.pop:hover { transform: translateY(-9px); }
+    .price-card.agency { border-color: var(--purple); background: linear-gradient(145deg, #faf5ff, #fff); }
+    .price-card.agency:hover { box-shadow: 0 8px 32px rgba(124,58,237,0.15); }
+    .pop-tag { position: absolute; top: 0; left: 50%; transform: translateX(-50%); background: var(--grad); color: #fff; font-size: 10px; font-weight: 700; padding: 4px 16px; border-radius: 0 0 9px 9px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+    .plan-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 10px; margin-top: 14px; }
+    .price-card.agency .plan-name { color: var(--purple); }
+    .price-row { display: flex; align-items: baseline; gap: 3px; margin-bottom: 6px; }
+    .price-amt  { font-size: 44px; font-weight: 900; color: var(--text); letter-spacing: -0.05em; }
+    .price-per  { font-size: 14px; color: var(--text3); }
+    .plan-desc  { font-size: 13px; color: var(--text3); margin-bottom: 20px; line-height: 1.55; }
+    .plan-btn { display: block; width: 100%; padding: 11px; text-align: center; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.18s; border: 1.5px solid var(--border); color: var(--text2); background: transparent; font-family: inherit; text-decoration: none; margin-bottom: 22px; }
+    .plan-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .price-card.pop    .plan-btn { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .price-card.pop    .plan-btn:hover { background: var(--blue-hover); }
+    .price-card.agency .plan-btn { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .price-card.agency .plan-btn:hover { background: #6d28d9; }
+    .plan-feats-lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 12px; }
+    .plan-feats { display: flex; flex-direction: column; gap: 8px; }
+    .plan-feat  { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text2); }
+    .feat-chk { width: 15px; height: 15px; border-radius: 50%; background: rgba(29,78,216,0.1); color: var(--blue); font-size: 8.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .price-card.agency .feat-chk { background: rgba(124,58,237,0.1); color: var(--purple); }
+    .ai-credits-row { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 18px; padding: 10px 12px; border-radius: 9px; background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.15); }
+    .ai-credits-label { font-size: 12px; color: var(--purple); font-weight: 700; display: flex; align-items: center; gap: 5px; }
+    .ai-credits-val   { font-size: 14px; font-weight: 800; color: var(--purple); }
+
+    /* FAQ */
+    #faq { background: var(--bg); }
+    .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+    .faq-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; font-size: 15.5px; font-weight: 600; color: var(--text); cursor: pointer; background: none; border: none; text-align: left; font-family: inherit; gap: 16px; transition: color 0.18s; }
+    .faq-q:hover { color: var(--blue); }
+    .faq-icon { width: 22px; height: 22px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; color: var(--text3); font-weight: 300; transition: transform 0.25s, background 0.2s, color 0.2s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--blue); border-color: var(--blue); color: #fff; }
+    .faq-body { max-height: 0; overflow: hidden; transition: max-height 0.32s ease; }
+    .faq-item.open .faq-body { max-height: 360px; }
+    .faq-ans { padding: 0 24px 20px; font-size: 14.5px; color: var(--text3); line-height: 1.72; }
+
+    /* CTA */
+    #cta { background: linear-gradient(140deg, #0a0f1e 0%, #0f1535 40%, #160d2e 70%, #0a0f1e 100%); text-align: center; position: relative; overflow: hidden; }
+    #cta::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 640px; height: 640px; background: radial-gradient(circle, rgba(29,78,216,0.17) 0%, transparent 65%); pointer-events: none; }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-inner .pill { margin-bottom: 20px; }
+    .cta-inner h2 { color: #fff; margin-bottom: 18px; }
+    .cta-inner p  { color: rgba(255,255,255,0.5); max-width: 460px; margin: 0 auto 36px; }
+    .cta-btns { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .cta-note { margin-top: 18px; font-size: 13px; color: rgba(255,255,255,0.3); }
+
+    /* FOOTER */
+    footer { background: #060b16; padding: 60px 24px 32px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 220px repeat(3,1fr); gap: 48px; padding-bottom: 44px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .f-brand-logo { font-size: 18px; font-weight: 900; color: #fff; letter-spacing: -0.04em; margin-bottom: 12px; }
+    .f-brand-logo span { color: #60a5fa; }
+    .f-brand p { font-size: 13.5px; color: rgba(255,255,255,0.38); line-height: 1.65; max-width: 200px; }
+    .f-col h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.32); margin-bottom: 16px; }
+    .f-col a { display: block; font-size: 14px; color: rgba(255,255,255,0.5); padding: 4px 0; transition: color 0.18s; }
+    .f-col a:hover { color: rgba(255,255,255,0.85); }
+    .footer-bot { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; gap: 16px; flex-wrap: wrap; }
+    .footer-bot p { font-size: 13px; color: rgba(255,255,255,0.27); }
+    .footer-bot-links { display: flex; gap: 20px; }
+    .footer-bot-links a { font-size: 13px; color: rgba(255,255,255,0.32); transition: color 0.18s; }
+    .footer-bot-links a:hover { color: rgba(255,255,255,0.65); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.vis { opacity: 1; transform: none; }
+    .delay-1 { transition-delay: 0.10s; } .delay-2 { transition-delay: 0.20s; }
+    .delay-3 { transition-delay: 0.30s; } .delay-4 { transition-delay: 0.40s; }
+    .delay-5 { transition-delay: 0.50s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .pricing-grid { grid-template-columns: 1fr 1fr; }
+      .price-card.pop { transform: none; }
+      .price-card.pop:hover { transform: translateY(-3px); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .ai-grid { grid-template-columns: 1fr; }
+      .sched-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .section { padding: 72px 0; }
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; padding: 56px 24px 80px; }
+      .hero-visual { order: -1; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .steps::before { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .nav-links, .nav-right { display: none; }
+      .hamburger { display: flex; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .footer-bot { flex-direction: column; align-items: flex-start; }
+      .caps-inner { justify-content: center; }
+      .cap-dot { display: none; }
+    }
+    @media (max-width: 580px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
+      .cta-btns { flex-direction: column; align-items: center; }
+      .cta-btns .btn { width: 100%; max-width: 300px; justify-content: center; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Ado<span>Boost</span></a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#ai-spotlight">AI Features</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      <a href="https://app.adobosolutions.com/login" class="nav-signin">Sign in</a>
+      <a href="https://app.adobosolutions.com/register" class="nav-cta">Start free →</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#how">How it works</a>
+  <a href="#ai-spotlight">AI Features</a>
+  <a href="#features">Features</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#faq">FAQ</a>
+  <a href="https://app.adobosolutions.com/login">Sign in</a>
+  <a href="https://app.adobosolutions.com/register" class="btn btn-primary">Start free trial →</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="grid-texture"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="pill pill-light">✦ AI-Powered Cold Email Platform</span>
+      <h1>AI writes it.<br>AdoBoost <em>sends it.</em></h1>
+      <p class="subhead">The all-in-one outreach platform powered by AI. Write sequences, warm your inbox, rotate accounts, track every open — and let AI do the heavy lifting.</p>
+      <div class="ai-badges">
+        <span class="ai-badge">🤖 AI Sequence Writer</span>
+        <span class="ai-badge">🔥 AI Inbox Warmup</span>
+        <span class="ai-badge">✨ AI Subject Lines</span>
+        <span class="ai-badge">🛡️ AI Spam Scorer</span>
+      </div>
+      <div class="hero-actions">
+        <a href="https://app.adobosolutions.com/register" class="btn btn-primary btn-lg">Start free — no credit card →</a>
+        <a href="#ai-spotlight" class="btn btn-ghost">See AI features</a>
+      </div>
+      <div class="hero-trust">
+        Free trial included
+        <span class="hero-trust-dot"></span>
+        Works with any SMTP
+        <span class="hero-trust-dot"></span>
+        Setup in under 5 minutes
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="app-mockup">
+        <div class="mock-bar">
+          <span class="mock-dot r"></span>
+          <span class="mock-dot y"></span>
+          <span class="mock-dot g"></span>
+          <span class="mock-url">app.adobosolutions.com/campaigns</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-sidebar">
+            <div class="mock-logo">Ado<span>Boost</span></div>
+            <div class="mock-nav">🏠 Dashboard</div>
+            <div class="mock-nav on">📧 Campaigns</div>
+            <div class="mock-nav">👥 Contacts</div>
+            <div class="mock-nav">📬 Inbox</div>
+            <div class="mock-nav">🔥 Warmup</div>
+            <div class="mock-nav">📊 Reports</div>
+            <div class="mock-nav">⚙️ Settings</div>
+          </div>
+          <div class="mock-main">
+            <div class="mock-header">
+              <span class="mock-title">Campaigns</span>
+              <span class="mock-new">+ New Campaign</span>
+            </div>
+            <div class="mock-ai-bar">
+              ✨ AI wrote your 3-step sequence in 12 seconds
+            </div>
+            <div class="mock-stats">
+              <div class="mock-stat">
+                <div class="mock-stat-val">342</div>
+                <div class="mock-stat-lbl">Sent today</div>
+              </div>
+              <div class="mock-stat">
+                <div class="mock-stat-val" style="color:#60a5fa">74</div>
+                <div class="mock-stat-lbl">Opened</div>
+              </div>
+              <div class="mock-stat">
+                <div class="mock-stat-val" style="color:#4ade80">23</div>
+                <div class="mock-stat-lbl">Replied</div>
+              </div>
+              <div class="mock-stat">
+                <div class="mock-stat-val" style="color:#fb923c">6</div>
+                <div class="mock-stat-lbl">Warmup</div>
+              </div>
+            </div>
+            <div class="mock-rows">
+              <div class="mock-row">
+                <div>
+                  <div class="mock-row-name">Q3 SaaS Decision Makers</div>
+                  <div class="mock-row-meta">187 sent · 3-step AI sequence · Mon–Fri</div>
+                </div>
+                <span class="mock-badge active">Active</span>
+              </div>
+              <div class="mock-row">
+                <div>
+                  <div class="mock-row-name">Agency Founder Outreach</div>
+                  <div class="mock-row-meta">155 sent · Eastern Time · 8am–6pm</div>
+                </div>
+                <span class="mock-badge active">Active</span>
+              </div>
+              <div class="mock-row">
+                <div>
+                  <div class="mock-row-name">support@acmecorp.com</div>
+                  <div class="mock-row-meta">Warmup · 78% health · 6 sent today</div>
+                </div>
+                <span class="mock-badge warm">Warming</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES BAR -->
+<div id="caps">
+  <div class="caps-inner">
+    <div class="cap-item">📧 <strong>Multi-Step Sequences</strong> with auto follow-ups</div>
+    <div class="cap-dot"></div>
+    <div class="cap-item">🤖 <strong>AI Writing</strong> for sequences, subjects &amp; rewrites</div>
+    <div class="cap-dot"></div>
+    <div class="cap-item">🔥 <strong>AI Inbox Warmup</strong> on autopilot</div>
+    <div class="cap-dot"></div>
+    <div class="cap-item">🔄 <strong>Inbox Rotation</strong> across unlimited accounts</div>
+    <div class="cap-dot"></div>
+    <div class="cap-item">📊 <strong>Full Tracking</strong> — opens, clicks, replies, unsubscribes</div>
+    <div class="cap-dot"></div>
+    <div class="cap-item">🌍 <strong>Timezone Scheduling</strong> for every campaign</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem" class="section">
+  <div class="container">
+    <div class="section-head center">
+      <span class="pill">The Problem</span>
+      <h2>Cold email is broken.<br>Here's why yours isn't working.</h2>
+      <p class="subhead">Most outreach fails before the prospect even reads it. These are the four reasons — and why AdoBoost solves all of them.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="problem-icon">📤</div>
+        <h3>You're sending in bulk</h3>
+        <p>Blasting 200 emails at once is a red flag for every major email provider. Domain reputation tanks. Future emails — even to warm leads — land in junk.</p>
+      </div>
+      <div class="problem-card reveal delay-1">
+        <div class="problem-icon">🔇</div>
+        <h3>Follow-ups never happen</h3>
+        <p>80% of replies come from follow-up #2 or #3. But manual follow-ups get skipped because you're busy. Leads go cold while you're working other deals.</p>
+      </div>
+      <div class="problem-card reveal delay-2">
+        <div class="problem-icon">✍️</div>
+        <h3>Writing cold emails is hard</h3>
+        <p>Staring at a blank email for 45 minutes only to get no reply is demoralising. Most people copy generic templates — and prospects know it immediately.</p>
+      </div>
+      <div class="problem-card reveal delay-3">
+        <div class="problem-icon">🥶</div>
+        <h3>Your inbox is cold</h3>
+        <p>New domain? Fresh email account? Sending from a cold inbox is like calling from an unknown number. Warming it manually takes weeks and is easy to get wrong.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="section">
+  <div class="container">
+    <div class="section-head center">
+      <span class="pill">How It Works</span>
+      <h2>From zero to booked meetings<br>in three steps.</h2>
+      <p class="subhead">AdoBoost handles the technical work — warming, scheduling, tracking — so you can focus on conversations.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>Connect &amp; warm your inbox</h3>
+        <p>Add your SMTP accounts in minutes. Enable AI warmup and AdoBoost sends contextual back-and-forth emails with partner inboxes — building your sender reputation on autopilot.</p>
+        <div class="step-items">
+          <div class="step-item"><span class="chk">✓</span>Any SMTP — Gmail, Outlook, Hostinger &amp; more</div>
+          <div class="step-item"><span class="chk">✓</span>AI-generated contextual warmup emails</div>
+          <div class="step-item"><span class="chk">✓</span>Real-time warmup health score</div>
+        </div>
+      </div>
+      <div class="step reveal delay-2">
+        <div class="step-num">2</div>
+        <h3>Let AI write your campaign</h3>
+        <p>Describe your offer and audience. AI generates a humanized 3-step cold email sequence in seconds — intro, follow-up, and breakup email — optimized for inbox delivery.</p>
+        <div class="step-items">
+          <div class="step-item"><span class="chk">✓</span>AI writes full multi-step sequences</div>
+          <div class="step-item"><span class="chk">✓</span>AI subject lines + spam score checker</div>
+          <div class="step-item"><span class="chk">✓</span>Timezone-aware scheduling + day selection</div>
+        </div>
+      </div>
+      <div class="step reveal delay-4">
+        <div class="step-num">3</div>
+        <h3>Replies come to you</h3>
+        <p>Emails go out at human-like random intervals. Replies sync back into AdoBoost's two-panel inbox. Responded contacts are auto-removed from follow-up sequences.</p>
+        <div class="step-items">
+          <div class="step-item"><span class="chk">✓</span>Two-panel Outlook-style inbox</div>
+          <div class="step-item"><span class="chk">✓</span>Open, click, reply &amp; unsubscribe tracking</div>
+          <div class="step-item"><span class="chk">✓</span>Campaign-level analytics dashboard</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI SPOTLIGHT -->
+<section id="ai-spotlight" class="section">
+  <div class="grid-texture"></div>
+  <div class="container ai-inner">
+    <div class="section-head center">
+      <span class="pill pill-purple">🤖 AI-Powered</span>
+      <h2 style="color:#fff">Every part of your outreach,<br><em style="font-style:normal;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">powered by AI.</em></h2>
+      <p class="subhead" style="color:rgba(255,255,255,0.52)">AdoBoost isn't just a sending tool. AI is woven into every step — from writing your first email to warming your last inbox.</p>
+    </div>
+    <div class="ai-grid">
+      <div class="ai-card reveal">
+        <span class="ai-card-tag">✨ AI Write</span>
+        <div class="ai-card-icon">🤖</div>
+        <h3>AI Sequence Generator</h3>
+        <p>Describe your target audience, your offer, and your industry. AI generates a full 3-step cold email sequence — intro, follow-up, and breakup email — in under 15 seconds. Every email is humanized, personalized, and optimized for cold outreach deliverability.</p>
+      </div>
+      <div class="ai-card reveal delay-1">
+        <span class="ai-card-tag">🔥 AI Warmup</span>
+        <div class="ai-card-icon">🔥</div>
+        <h3>AI-Powered Inbox Warmup</h3>
+        <p>AdoBoost's warmup engine doesn't send generic "test" emails. It uses your company name, product, and industry to generate contextual, real-looking conversations with warmup partner inboxes. Your domain reputation builds naturally — no spam filter triggers.</p>
+      </div>
+      <div class="ai-card reveal delay-2">
+        <span class="ai-card-tag">✦ AI Subjects</span>
+        <div class="ai-card-icon">💡</div>
+        <h3>AI Subject Line Generator</h3>
+        <p>Paste your email body and AI generates 5 subject line options — each with a different angle, tone, and hook. One click to apply. No more staring at a blank subject field wondering what will actually get opened.</p>
+      </div>
+      <div class="ai-card reveal delay-3">
+        <span class="ai-card-tag">🛡️ AI Spam Score</span>
+        <div class="ai-card-icon">🛡️</div>
+        <h3>AI Spam Score &amp; Rewriter</h3>
+        <p>Before you send, run your email through AI's spam analysis. Get a 1–10 score with specific reasons why it might land in junk. Then use AI Rewrite to fix it — choose from Professional, Friendly, Direct, or Aggressive tones with one click.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="section">
+  <div class="container">
+    <div class="section-head center">
+      <span class="pill">Platform Features</span>
+      <h2>Everything you need to run<br>outreach at scale.</h2>
+      <p class="subhead">AdoBoost is purpose-built for founders and sales teams who want results — not complexity.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card reveal">
+        <div class="feat-icon">🕐</div>
+        <h3>Humanized Sending</h3>
+        <p>Emails go out at random intervals within your configured working hours and days — never as bulk blasts. Choose your timezone, set Mon–Fri or custom days, and define your send window. Every send looks like a human hit send right now.</p>
+      </div>
+      <div class="feat-card reveal delay-1">
+        <div class="feat-icon">🔄</div>
+        <h3>Inbox Rotation</h3>
+        <p>Connect multiple SMTP accounts and distribute send volume automatically. AdoBoost switches accounts when one hits its daily limit. Run 3 inboxes and triple your daily volume — safely. Import hundreds of accounts at once via CSV.</p>
+      </div>
+      <div class="feat-card reveal delay-2">
+        <div class="feat-icon">📬</div>
+        <h3>Two-Panel Reply Inbox</h3>
+        <p>All replies sync via IMAP into an Outlook-style inbox. Read, reply, tag, archive, and forward without leaving AdoBoost. Replied contacts are automatically excluded from all pending follow-up steps.</p>
+      </div>
+      <div class="feat-card reveal delay-3">
+        <div class="feat-icon">📋</div>
+        <h3>Multi-Step Sequences</h3>
+        <p>Build automated follow-up sequences with configurable delays — days and hours between each step. AdoBoost stops the sequence the moment someone replies, unsubscribes, or bounces. No awkward emails to people who already said yes.</p>
+      </div>
+      <div class="feat-card reveal delay-4">
+        <div class="feat-icon">📊</div>
+        <h3>Full Campaign Analytics</h3>
+        <p>Track opens, clicks, replies, unsubscribes, and bounces at the campaign and sequence level. See open rate, click rate, and reply rate in real time. Know exactly which subject lines and sequences are converting.</p>
+      </div>
+      <div class="feat-card reveal delay-5">
+        <div class="feat-icon">👥</div>
+        <h3>Contact Management</h3>
+        <p>Upload contacts via CSV, organize into lists, add tags and custom fields. AdoBoost automatically removes unsubscribes and bounces from future sends. Keep your lists clean without any manual work.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">🌍</div>
+        <h3>Timezone-Aware Scheduling</h3>
+        <p>Set your campaign's timezone, pick which days to send (Mon–Fri by default), and define your send window (e.g. 8am–6pm). AdoBoost ensures every email lands during business hours in your prospect's timezone.</p>
+      </div>
+      <div class="feat-card reveal delay-1">
+        <div class="feat-icon">👨‍👩‍👧</div>
+        <h3>Team Members</h3>
+        <p>Invite teammates with granular permission controls. Each team member can access campaigns, contacts, and inboxes based on the access level you set. Perfect for sales teams and agencies managing multiple clients.</p>
+      </div>
+      <div class="feat-card reveal delay-2">
+        <div class="feat-icon">🔌</div>
+        <h3>API Access</h3>
+        <p>Integrate AdoBoost with your CRM, webhook, or custom workflow via the REST API. Available on Professional and Agency plans. Automate contact enrollment, trigger campaigns, and pull analytics programmatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULING SECTION -->
+<section id="schedule" class="section">
+  <div class="container">
+    <div class="sched-grid">
+      <div class="sched-left reveal">
+        <span class="pill">Smart Scheduling</span>
+        <h2>Send at the right time,<br>every time.</h2>
+        <p>Your new campaign wizard puts scheduling first — because when your email lands matters as much as what it says.</p>
+        <div class="sched-points">
+          <div class="sched-point">
+            <div class="sched-point-icon">📅</div>
+            <div class="sched-point-text">
+              <strong>Day-of-week control</strong>
+              <span>Pick exactly which days to send. Skip weekends, target Tuesday–Thursday, or go all days for global audiences.</span>
+            </div>
+          </div>
+          <div class="sched-point">
+            <div class="sched-point-icon">🌍</div>
+            <div class="sched-point-text">
+              <strong>Full timezone support</strong>
+              <span>50+ timezones with UTC offsets. Your emails land during business hours wherever your prospects are.</span>
+            </div>
+          </div>
+          <div class="sched-point">
+            <div class="sched-point-icon">⏰</div>
+            <div class="sched-point-text">
+              <strong>Custom send window</strong>
+              <span>Set FROM and TO times (e.g. 8:00 AM – 6:00 PM). Toggle All Hours for 24/7 global sends.</span>
+            </div>
+          </div>
+          <div class="sched-point">
+            <div class="sched-point-icon">🚀</div>
+            <div class="sched-point-text">
+              <strong>Start immediately option</strong>
+              <span>Enable "Start Campaign Immediately" and your campaign launches the moment you hit Create — no manual start needed.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sched-right reveal delay-2">
+        <div class="sched-ui-title">📅 Campaign Schedule Settings</div>
+        <div class="sched-tabs">
+          <div class="sched-tab on">1 · Schedule</div>
+          <div class="sched-tab">2 · Write Emails</div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Send Days</div>
+        <div class="sched-days">
+          <div class="sched-day">MON</div>
+          <div class="sched-day">TUE</div>
+          <div class="sched-day">WED</div>
+          <div class="sched-day">THU</div>
+          <div class="sched-day">FRI</div>
+          <div class="sched-day off">SAT</div>
+          <div class="sched-day off">SUN</div>
+        </div>
+        <div class="sched-row">
+          <span class="sched-row-label">Timezone</span>
+          <span class="sched-row-val">(GMT-05:00) Eastern Time</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-row-label">Send Window</span>
+          <span class="sched-row-val">08:00 AM → 06:00 PM</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-row-label">Visibility</span>
+          <span class="sched-row-val">👥 Everyone</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-row-label">Start Immediately</span>
+          <span class="sched-row-val" style="color:#16a34a">✓ Enabled</span>
+        </div>
+        <div style="margin-top:18px;padding:12px 14px;background:#f0fff4;border:1px solid #86efac;border-radius:9px;font-size:12.5px;color:#166534;font-weight:600">
+          ✅ Campaign will start sending immediately after creation
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="section">
+  <div class="container">
+    <div class="section-head center">
+      <span class="pill">Pricing</span>
+      <h2>Simple, transparent pricing.</h2>
+      <p class="subhead">Start free. Every plan includes AI features and inbox warmup. No hidden fees, no annual lock-in.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- TRIAL -->
+      <div class="price-card reveal">
+        <div class="plan-name">Trial</div>
+        <div class="price-row"><span class="price-amt">$0</span><span class="price-per">/mo</span></div>
+        <p class="plan-desc">Try AdoBoost on a small list. No credit card needed.</p>
+        <div class="ai-credits-row">
+          <span class="ai-credits-label">⚡ AI Credits / Month</span>
+          <span class="ai-credits-val">10</span>
+        </div>
+        <a href="https://app.adobosolutions.com/register" class="plan-btn">Get started free</a>
+        <div class="plan-feats-lbl">Includes</div>
+        <div class="plan-feats">
+          <div class="plan-feat"><span class="feat-chk">✓</span>2 campaigns</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>200 contacts</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>1 email account</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>50 emails / day</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>AI-powered warmup</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Basic analytics</div>
+        </div>
+      </div>
+
+      <!-- STARTER -->
+      <div class="price-card reveal delay-1">
+        <div class="plan-name">Starter</div>
+        <div class="price-row"><span class="price-amt">$29</span><span class="price-per">/mo</span></div>
+        <p class="plan-desc">For solo founders running consistent outreach campaigns.</p>
+        <div class="ai-credits-row">
+          <span class="ai-credits-label">⚡ AI Credits / Month</span>
+          <span class="ai-credits-val">100</span>
+        </div>
+        <a href="https://app.adobosolutions.com/register" class="plan-btn">Get started</a>
+        <div class="plan-feats-lbl">Includes</div>
+        <div class="plan-feats">
+          <div class="plan-feat"><span class="feat-chk">✓</span>10 campaigns</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>3,000 contacts</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>3 email accounts</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>500 emails / day</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>AI-powered warmup</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>IMAP inbox sync</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Email templates</div>
+        </div>
+      </div>
+
+      <!-- PROFESSIONAL (POPULAR) -->
+      <div class="price-card pop reveal delay-2">
+        <div class="pop-tag">Most Popular</div>
+        <div class="plan-name">Professional</div>
+        <div class="price-row"><span class="price-amt">$79</span><span class="price-per">/mo</span></div>
+        <p class="plan-desc">For growing teams with high volume and API access needs.</p>
+        <div class="ai-credits-row">
+          <span class="ai-credits-label">⚡ AI Credits / Month</span>
+          <span class="ai-credits-val">1,000</span>
+        </div>
+        <a href="https://app.adobosolutions.com/register" class="plan-btn">Get started</a>
+        <div class="plan-feats-lbl">Everything in Starter, plus</div>
+        <div class="plan-feats">
+          <div class="plan-feat"><span class="feat-chk">✓</span>50 campaigns</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>15,000 contacts</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>6 email accounts</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>2,000 emails / day</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Inbox rotation</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>API access</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Team members</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Priority support</div>
+        </div>
+      </div>
+
+      <!-- AGENCY -->
+      <div class="price-card agency reveal delay-3">
+        <div class="plan-name">Agency</div>
+        <div class="price-row"><span class="price-amt" style="color:#7c3aed">$299</span><span class="price-per">/mo</span></div>
+        <p class="plan-desc">For agencies managing high-volume outreach at scale.</p>
+        <div class="ai-credits-row" style="background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.25)">
+          <span class="ai-credits-label" style="color:#7c3aed">⚡ AI Credits / Month</span>
+          <span class="ai-credits-val" style="color:#7c3aed">Unlimited</span>
+        </div>
+        <a href="https://app.adobosolutions.com/register" class="plan-btn">Get started</a>
+        <div class="plan-feats-lbl">Everything in Pro, plus</div>
+        <div class="plan-feats">
+          <div class="plan-feat"><span class="feat-chk">✓</span>Unlimited campaigns</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>250,000 contacts</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Unlimited email accounts</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Unlimited emails / day</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>White-label</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Sub-accounts</div>
+          <div class="plan-feat"><span class="feat-chk">✓</span>Dedicated support</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section">
+  <div class="container">
+    <div class="section-head center">
+      <span class="pill">FAQ</span>
+      <h2>Common questions.</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q">What AI features does AdoBoost include?<span class="faq-icon">+</span></button>
+        <div class="faq-body">
+          <div class="faq-ans">AdoBoost includes four AI-powered tools: (1) <strong>AI Sequence Generator</strong> — describe your audience and offer, AI writes a complete 3-step cold email sequence in seconds. (2) <strong>AI Subject Line Generator</strong> — paste your email body, get 5 AI-generated subject line options instantly. (3) <strong>AI Rewrite &amp; Spam Scorer</strong> — score any email 1–10 for spam risk, then rewrite it in your chosen tone. (4) <strong>AI Inbox Warmup</strong> — AI generates contextual warmup emails using your company and product info, making warmup emails look like real conversations.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">How does AI inbox warmup actually work?<span class="faq-icon">+</span></button>
+        <div class="faq-body">
+          <div class="faq-ans">When you enable warmup on an email account, AdoBoost connects your inbox to a warmup network of partner accounts. Our AI generates contextual, realistic emails based on your company name, product, and industry — not generic "test" messages. These emails get sent, opened, and replied to by partner inboxes, which signals to email providers that your account is trusted and active. Your warmup health score (0–100%) tracks how your reputation is building. We recommend 2–4 weeks of warmup before launching campaigns on new domains.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Does AI write the actual emails that get sent to my prospects?<span class="faq-icon">+</span></button>
+        <div class="faq-body">
+          <div class="faq-ans">Yes — but you're always in control. AI generates a draft sequence based on your inputs. You review every email before the campaign goes live, and you can edit, rewrite, or completely replace anything AI writes. AI is a starting point, not autopilot. You approve what gets sent.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">How does the humanized sending schedule work?<span class="faq-icon">+</span></button>
+        <div class="faq-body">
+          <div class="faq-ans">AdoBoost's scheduler spreads your sends randomly within your configured send window (e.g. 8am–6pm) on the days you choose (e.g. Mon–Fri). Emails go out at unpredictable intervals — not in a batch at 9:00 AM. You can pick your timezone so emails always land during business hours in your prospect's region. This makes your sending behaviour statistically indistinguishable from a human hitting send manually throughout the day.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Can I connect multiple email accounts and import them in bulk?<span class="faq-icon">+</span></button>
+        <div class="faq-body">
+          <div class="faq-ans">Yes on both. All paid plans support multiple email accounts, and AdoBoost's inbox rotation automatically distributes sends across them — switching accounts when one hits its daily limit. If you have dozens of accounts, use our bulk CSV import: download the template, fill in your SMTP details, and upload. AdoBoost imports everything at once, skipping duplicates and reporting any errors row-by-row.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">What happens when a prospect replies?<span class="faq-icon">+</span></button>
+        <div class="faq-body">
+          <div class="faq-ans">AdoBoost syncs your inbox via IMAP and shows all replies in an Outlook-style two-panel inbox. You can read, reply, tag, archive, or forward without leaving AdoBoost. Replied contacts are automatically excluded from any remaining follow-up steps in their sequence — so they never receive an awkward "just following up" after they've already responded.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Which email providers does AdoBoost support?<span class="faq-icon">+</span></button>
+        <div class="faq-body">
+          <div class="faq-ans">Any provider with SMTP and IMAP access — which is virtually all of them. This includes Google Workspace, Microsoft 365, Zoho Mail, Yahoo Mail, Hostinger Mail, Namecheap Private Email, Brevo, Amazon SES, and any custom mail server. AdoBoost includes preset configurations for Gmail, Outlook, Yahoo, and Hostinger to make setup faster.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="section">
+  <div class="container">
+    <div class="cta-inner">
+      <span class="pill pill-light">🚀 Get started today</span>
+      <h2>Ready to fill your calendar<br>with AI-written outreach?</h2>
+      <p>Set up your first AI campaign in under 10 minutes. Free trial included. No credit card required.</p>
+      <div class="cta-btns">
+        <a href="https://app.adobosolutions.com/register" class="btn btn-primary btn-lg">Start your free trial →</a>
+        <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
+      </div>
+      <p class="cta-note">Free trial &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; Cancel anytime</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="f-brand">
+        <div class="f-brand-logo">Ado<span>Boost</span></div>
+        <p>AI-powered cold email outreach platform for founders, sales teams, and agencies.</p>
+      </div>
+      <div class="f-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#ai-spotlight">AI Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#how">How it works</a>
+        <a href="https://app.adobosolutions.com/register">Start free trial</a>
+      </div>
+      <div class="f-col">
+        <h4>Account</h4>
+        <a href="https://app.adobosolutions.com/login">Sign in</a>
+        <a href="https://app.adobosolutions.com/register">Create account</a>
+        <a href="https://app.adobosolutions.com/settings/billing">Billing</a>
+        <a href="https://app.adobosolutions.com/settings">Settings</a>
+      </div>
+      <div class="f-col">
+        <h4>Support</h4>
+        <a href="https://app.adobosolutions.com/support">Help center</a>
+        <a href="https://app.adobosolutions.com/support/ticket">Submit a ticket</a>
+        <a href="mailto:support@adobosolutions.com">Email support</a>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <p>© 2026 AdoBoost by Adobo Solutions. All rights reserved.</p>
+      <div class="footer-bot-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Anti-Spam Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* Nav scroll */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+
+  /* Hamburger */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => { mobileMenu.classList.remove('open'); hamburger.classList.remove('open'); });
+  });
+
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  /* Scroll reveal */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); observer.unobserve(e.target); } });
+  }, { threshold: 0.10, rootMargin: '0px 0px -36px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* Smooth anchor scroll */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
